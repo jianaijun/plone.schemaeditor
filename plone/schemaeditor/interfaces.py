@@ -21,9 +21,9 @@ class ISchemaContext(IItem):
     schema = Object(
         schema = IInterface
         )
-    
+
     schemaEditorView = Attribute("""Name of the schema editor view. Optional.""")
-    
+
     additionalSchemata = Attribute("""Additional schemas that may modify this one.""")
 
     allowedFields = Attribute(
@@ -122,7 +122,7 @@ class INewField(Interface):
         # So it will be injected from fields.py
         # default=TextLineFactory,
         )
-    
+
     @invariant
     def checkTitleAndDescriptionTypes(data):
         if data.__name__ is not None and data.factory is not None:
