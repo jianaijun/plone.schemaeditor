@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+>
+
+<head>
+<style type="text/css" media="screen">
+    #modelEditor {
+        position: absolute;
+        top: 100px;
+        right: 2%;
+        bottom: 2%;
+        left:1%;
+        border: 1px solid black;
+    }
+</style>
+
+<script src="++resource++plone.resourceeditor/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+<div  class="documentEditable" >
+
+    <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+      Portal status message
+    </div>
+
+    <div id="content">
+        <div id="modelEditor" tal:content="view/modelSource" />
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    var editor = ace.edit("modelEditor"),
+        session = editor.getSession();
+    editor.setTheme("ace/theme/textmate");
+    session.setMode("ace/mode/xml");
+    session.getSession().setTabSize(4);
+    session.getSession().setUseSoftTabs(true);
+</script>
+
+</body>
+</html>

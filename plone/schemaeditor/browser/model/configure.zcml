@@ -1,0 +1,15 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="plone.schemaeditor">
+
+  <browser:page
+      name="model-edit"
+      for="plone.schemaeditor.interfaces.ISchemaContext"
+      class=".modeleditor.ModelEditorView"
+      permission="plone.schemaeditor.ManageSchemata"
+      template="modeleditor.pt"
+      allowed_attributes="modelSource" />
+
+</configure>
