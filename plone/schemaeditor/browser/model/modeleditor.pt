@@ -1,37 +1,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
->
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    lang="en"
+    metal:use-macro="context/main_template/macros/master"
+    i18n:domain="plone">
 
 <head tal:define="portal_url context/@@plone_portal_state/portal_url">
-<style type="text/css" media="screen">
-    body {
-        font: 100% Arial,FreeSans,sans-serif;
-    }
-    #modelEditor {
-        position: absolute;
-        top: 100px;
-        right: 0;
-        bottom: 2%;
-        left: 0;
-        border: 1px solid black;
-    }
-    .formControls {
-        text-align: right;
-        font-size: 175%;
-    }
-    .formControls input {
-        font-size: 100%;
-    }
-    .portalMessage {
-        float: left;
-        font-size: 200%;
-        color: #fff;
-    }
-    .portalMessage span {
-        background-color: #0a0;
-        padding: 0.5em;
-    }
-</style>
+<metal:block fill-slot="top_slot">
 
+<tal:defines define="dummy python:request.set('disable_border',1);
+                     disable_column_one python:request.set('disable_plone.leftcolumn',1);
+                     disable_column_two python:request.set('disable_plone.rightcolumn',1);"/>
+
+</metal:block>
+
+<metal:block fill-slot="head_slot">
+
+<link href="++resource++modeleditor.css"
+    media="screen"
+    type="text/css"
+    rel="stylesheet"
+    tal:attributes="href string:${portal_url}/++resource++plone.schemaeditor.modeleditor.css"
+    />
 
 <script src="++resource++plone.app.jquery.js"
     type="text/javascript"
@@ -42,97 +33,62 @@
     charset="utf-8"
     tal:attributes="src string:${portal_url}/++resource++plone.resourceeditor/ace/ace.js"
     ></script>
+<script src="++resource++plone.schemaeditor/modeleditor.js"
+    type="text/javascript"
+    charset="utf-8"
+    tal:attributes="src string:${portal_url}/++resource++plone.schemaeditor.modeleditor.js"
+    ></script>
 
-<script type="text/javascript">
-    jQuery(function ($) {
-        var editor = ace.edit("modelEditor"),
-            session = editor.getSession(),
-            myform = $("#saveform");
-
-        // editor tuneup
-        editor.setTheme("ace/theme/textmate");
-        session.setMode("ace/mode/xml");
-        session.setTabSize(4);
-        session.setUseSoftTabs(true);
-        session.setUseWrapMode(true);
-        editor.setHighlightActiveLine(false);
-        // Make save keystroke trigger save form submit
-        editor.commands.addCommand({
-            name: "save",
-            bindKey: {win: "Ctrl-S", mac: "Command-S"},
-            exec: function() {
-                myform.submit();
-            }
-        });
-
-        // enable save submit button on change
-        session.on('change', function(e) {
-            $('#saveform :submit').removeAttr('disabled');
-        });
-
-        // form submit handler; ajax posts data
-        myform.on( "submit", function( event ) {
-            var action = myform.attr('action');
-
-            // prevent real submit
-            event.preventDefault();
-
-            // stuff the editor contents into the form
-            // for easy serialization
-            $('#savesource').val(editor.getValue());
-
-            $.getJSON(action, myform.serialize(), function (rez) {
-                if (rez.success) {
-                    var messagespan = $("#messagespan");
-
-                    // disable save button
-                    $('#saveform :submit').attr('disabled', 'disabled');
-                    messagespan.html(rez.message);
-                    messagespan.show().fadeOut(1000);
-
-
-                } else {
-                    alert(rez.message);
-                }
-            })
-            .fail(function() { alert("No response from server; not saved."); });
-
-        });
-    });
-</script>
-
-
+</metal:block>
 </head>
 
 <body>
-<div  class="documentEditable" >
-
-    <div class="portalMessage info">
-      <span id="messagespan" style="display:none">
-        &nbsp;
-      </span>&nbsp;
-    </div>
-
-    <form id="saveform"
-        tal:attributes="action string:${context/absolute_url}/@@model-edit-save"
-        tal:define="authenticator context/@@authenticator/authenticator | nothing">
-        <input tal:replace="structure authenticator" />
-        <input type="hidden" id="savesource" name="source" value="" />
-        <div class="formControls">
-            <input class="context" type="submit" name="form.button.save" value="Save" disabled="disabled" />
-        </div>
-
-    </form>
+<div metal:fill-slot="content" class="documentEditable" id="themeMapper">
 
     <div id="content">
-        <div id="modelEditor" tal:content="view/modelSource" />
+
+        <div id="page-intro">
+
+            <h1 class="documentFirstHeading"
+                i18n:translate="heading_model_edit">Edit model for
+                <span i18n:name="name" tal:content="context/Title">name</span>
+            </h1>
+
+            <a href=""
+                class="link-parent"
+                tal:attributes="href string:${context/absolute_url}/@@fields"
+                i18n:translate="label_up_to_schemaeditor">
+                    Back to the schema editor
+            </a>
+
+        </div>
+
+        <div id="rules-results-row" class="row">
+            <div id="rules-editor" class="mapper-box cell width-full position-0">
+
+                <div class="portalMessage info">
+                  <span id="messagespan" style="display:none">
+                    &nbsp;
+                  </span>&nbsp;
+                </div>
+
+                <form id="saveform"
+                    tal:attributes="action string:${context/absolute_url}/@@model-edit-save"
+                    tal:define="authenticator context/@@authenticator/authenticator | nothing">
+                    <input tal:replace="structure authenticator" />
+                    <input type="hidden" id="savesource" name="source" value="" />
+                    <div class="formControls">
+                        <input class="context" type="submit" name="form.button.save" value="Save" disabled="disabled" />
+                    </div>
+                </form>
+
+                <div id="modelEditor" tal:content="view/modelSource" />
+
+            </div>
+        </div>
+
     </div>
 
 </div>
-
-
-<script type="text/javascript">
-</script>
-
 </body>
 </html>

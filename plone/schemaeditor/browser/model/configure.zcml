@@ -19,4 +19,14 @@
       permission="plone.schemaeditor.ManageSchemata"
       />
 
+  <browser:resource
+    name="plone.schemaeditor.modeleditor.css"
+    file="modeleditor.css"
+    />
+
+  <browser:resource
+    name="plone.schemaeditor.modeleditor.js"
+    file="modeleditor.js"
+    />
+
 </configure>
