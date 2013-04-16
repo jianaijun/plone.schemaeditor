@@ -1,3 +1,6 @@
+import json
+from lxml import etree
+
 from zope.component import queryMultiAdapter
 from Products.Five import BrowserView
 from AccessControl import Unauthorized
@@ -22,15 +25,43 @@ class AjaxSaveHandler(BrowserView):
     def __call__(self):
         """ handle AJAX save post """
 
-        self.request.response.setHeader('Content-Type', 'text/plain')
-
         if not authorized(self.context, self.request):
-            return "Unathorized"
+            raise Unauthorized
 
         source = self.request.form.get('source')
         if source:
+            # Is it valid XML?
+            try:
+                root = etree.fromstring(source)
+            except etree.XMLSyntaxError, e:
+                return json.dumps({
+                    'success': False,
+                    'message': "XMLSyntaxError: %s" % e.message.encode('utf8')
+                })
+
+            # a little more sanity checking, look at first two element levels
+            if root.tag != '{http://namespaces.plone.org/supermodel/schema}model':
+                return json.dumps({
+                    'success': False,
+                    'message': "Error: root tag must be 'model'"
+                })
+            for element in root.getchildren():
+                if element.tag != '{http://namespaces.plone.org/supermodel/schema}schema':
+                    return json.dumps({
+                        'success': False,
+                        'message': "Error: all model elements must be 'schema'"
+                    })
+
+            # clean up formatting sins
+            source = etree.tostring(
+                root,
+                pretty_print=True,
+                xml_declaration=True,
+                encoding='utf8'
+            )
+            # and save to FTI
             fti = self.context.fti
-            # XXX add sanity checks
-            # fti._setPropValue('model_source', source)
             fti.manage_changeProperties(model_source=source)
-            return "Saved"
+
+            self.request.response.setHeader('Content-Type', 'application/json')
+            return json.dumps({'success': True, 'message': "Saved"})
