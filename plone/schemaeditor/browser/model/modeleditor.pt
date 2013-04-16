@@ -6,10 +6,17 @@
     #modelEditor {
         position: absolute;
         top: 100px;
-        right: 2%;
+        right: 0;
         bottom: 2%;
-        left:1%;
+        left: 0;
         border: 1px solid black;
+    }
+    .formControls {
+        text-align: right;
+        font-size: 175%;
+    }
+    .formControls input {
+        font-size: 100%;
     }
 </style>
 
@@ -28,31 +35,45 @@
     jQuery(function ($) {
         var editor = ace.edit("modelEditor"),
             session = editor.getSession(),
-            commands = editor.commands;
+            myform = $("#saveform");
+
+        // editor tuneup
         editor.setTheme("ace/theme/textmate");
         session.setMode("ace/mode/xml");
         session.setTabSize(4);
         session.setUseSoftTabs(true);
         session.setUseWrapMode(true);
         editor.setHighlightActiveLine(false);
-
-        commands.addCommand({
+        // Make save keystroke trigger save form submit
+        editor.commands.addCommand({
             name: "save",
             bindKey: {win: "Ctrl-S", mac: "Command-S"},
             exec: function() {
-                $('#saveform').submit();
+                myform.submit();
             }
         });
 
+        // enable save submit button on change
         session.on('change', function(e) {
             $('#saveform :submit').removeAttr('disabled');
         });
 
-        $( "#saveform" ).on( "submit", function( event ) {
-            event.preventDefault();
-            alert("Fake Save File");
-            console.log( $(this).serialize() );
+        // form submit handler; ajax posts data
+        myform.on( "submit", function( event ) {
+            var action = myform.attr('action');
+
+            // stuff the editor contents into the form
+            // for easy serialization
+            $('#savesource').val(editor.getValue());
+
+            jQuery.post(action, myform.serialize(), function (rez) {
+                alert(rez);
+            });
+
+            // disable save button
             $('#saveform :submit').attr('disabled', 'disabled');
+            // prevent real submit
+            event.preventDefault();
         });
     });
 </script>
@@ -67,7 +88,9 @@
       Portal status message
     </div>
 
-    <form id="saveform" tal:define="authenticator context/@@authenticator/authenticator | nothing">
+    <form id="saveform"
+        tal:attributes="action string:${context/absolute_url}/@@model-edit-save"
+        tal:define="authenticator context/@@authenticator/authenticator | nothing">
         <input tal:replace="structure authenticator" />
         <input type="hidden" id="savesource" name="source" value="" />
         <div class="formControls">

@@ -10,6 +10,13 @@
       class=".modeleditor.ModelEditorView"
       permission="plone.schemaeditor.ManageSchemata"
       template="modeleditor.pt"
-      allowed_attributes="modelSource" />
+      />
+
+  <browser:page
+      name="model-edit-save"
+      for="plone.schemaeditor.interfaces.ISchemaContext"
+      class=".modeleditor.AjaxSaveHandler"
+      permission="plone.schemaeditor.ManageSchemata"
+      />
 
 </configure>
