@@ -1,4 +1,3 @@
 tests
-i18n
 connection from @@fields
 set width/height of editor via js

@@ -24,10 +24,6 @@
     tal:attributes="href string:${portal_url}/++resource++plone.schemaeditor.modeleditor.css"
     />
 
-<script src="++resource++plone.app.jquery.js"
-    type="text/javascript"
-    tal:attributes="src string:${portal_url}/++resource++plone.app.jquery.js"
-    ></script>
 <script src="++resource++plone.resourceeditor/ace/ace.js"
     type="text/javascript"
     charset="utf-8"
@@ -43,7 +39,7 @@
 </head>
 
 <body>
-<div metal:fill-slot="content" class="documentEditable" id="themeMapper">
+<div metal:fill-slot="content" class="documentEditable">
 
     <div id="content">
 
@@ -57,7 +53,7 @@
             <a href=""
                 class="link-parent"
                 tal:attributes="href string:${context/absolute_url}/@@fields"
-                i18n:translate="label_up_to_schemaeditor">
+                i18n:translate="label_back_to_schemaeditor">
                     Back to the schema editor
             </a>
 

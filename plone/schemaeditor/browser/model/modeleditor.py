@@ -5,6 +5,8 @@ from zope.component import queryMultiAdapter
 from Products.Five import BrowserView
 from AccessControl import Unauthorized
 
+from plone.schemaeditor import SchemaEditorMessageFactory as _
+
 
 class ModelEditorView(BrowserView):
     """ editor view """
@@ -43,13 +45,13 @@ class AjaxSaveHandler(BrowserView):
             if root.tag != '{http://namespaces.plone.org/supermodel/schema}model':
                 return json.dumps({
                     'success': False,
-                    'message': "Error: root tag must be 'model'"
+                    'message': _(u"Error: root tag must be 'model'")
                 })
             for element in root.getchildren():
                 if element.tag != '{http://namespaces.plone.org/supermodel/schema}schema':
                     return json.dumps({
                         'success': False,
-                        'message': "Error: all model elements must be 'schema'"
+                        'message': _(u"Error: all model elements must be 'schema'")
                     })
 
             # clean up formatting sins
@@ -64,4 +66,4 @@ class AjaxSaveHandler(BrowserView):
             fti.manage_changeProperties(model_source=source)
 
             self.request.response.setHeader('Content-Type', 'application/json')
-            return json.dumps({'success': True, 'message': "Saved"})
+            return json.dumps({'success': True, 'message': _(u"Saved")})
