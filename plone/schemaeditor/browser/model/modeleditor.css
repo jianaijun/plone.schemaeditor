@@ -1,23 +1,21 @@
-#portal-top, #viewlet-above-content, #portal-breadcrumbs, #portal-footer, #portal-colophon, #portal-siteactions {
+#portal-top,
+#viewlet-above-content,
+#portal-breadcrumbs,
+#portal-footer,
+#portal-colophon,
+#portal-siteactions {
     display: none;
 }
 
-/*#modelEditor {
-    position: absolute;
-    top: 100px;
-    right: 0;
-    bottom: 2%;
-    left: 0;
-    border: 1px solid black;
-}
-*/
 #modelEditor {
-    height: 749.6px;
+    height: 600px;
     position: absolute;
+    right: 1px;
+    left: 1px;
     z-index: 1;
-    width: 818px;
     border: 1px solid #ccc;
 }
+
 .formControls {
     text-align: left;
     font-size: 175%;

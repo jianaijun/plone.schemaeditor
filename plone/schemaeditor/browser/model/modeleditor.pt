@@ -63,28 +63,25 @@
 
         </div>
 
-        <div id="rules-results-row" class="row">
-            <div id="rules-editor" class="mapper-box cell width-full position-0">
+        <div id="rules-editor">
 
-                <div class="portalMessage info">
-                  <span id="messagespan" style="display:none">
-                    &nbsp;
-                  </span>&nbsp;
-                </div>
-
-                <form id="saveform"
-                    tal:attributes="action string:${context/absolute_url}/@@model-edit-save"
-                    tal:define="authenticator context/@@authenticator/authenticator | nothing">
-                    <input tal:replace="structure authenticator" />
-                    <input type="hidden" id="savesource" name="source" value="" />
-                    <div class="formControls">
-                        <input class="context" type="submit" name="form.button.save" value="Save" disabled="disabled" />
-                    </div>
-                </form>
-
-                <div id="modelEditor" tal:content="view/modelSource" />
-
+            <div class="portalMessage info">
+              <span id="messagespan" style="display:none">
+                &nbsp;
+              </span>&nbsp;
             </div>
+
+            <form id="saveform"
+                tal:attributes="action string:${context/absolute_url}/@@model-edit-save"
+                tal:define="authenticator context/@@authenticator/authenticator | nothing">
+                <input tal:replace="structure authenticator" />
+                <input type="hidden" id="savesource" name="source" value="" />
+                <div class="formControls">
+                    <input class="context" type="submit" name="form.button.save" value="Save" disabled="disabled" />
+                </div>
+            </form>
+
+            <div id="modelEditor" tal:content="view/modelSource" />
         </div>
 
     </div>
