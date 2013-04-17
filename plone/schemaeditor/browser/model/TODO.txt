@@ -1,3 +1,2 @@
 tests
-connection from @@fields
-set width/height of editor via js
+ideally, set height of editor via js

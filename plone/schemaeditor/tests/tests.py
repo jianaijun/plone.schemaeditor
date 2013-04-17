@@ -25,11 +25,11 @@ def setUp(self):
         configure_vocabulary_registry()
 
     zcml.load_config('tests.zcml', plone.schemaeditor.tests)
-    
+
     # add a test layer to the request so we can use special form templates that don't
     # pull in main_template
     classImplements(BaseRequest, ITestLayer)
-    
+
 def tearDown(self):
     classImplements(implementedBy(BaseRequest) - ITestLayer)
 
